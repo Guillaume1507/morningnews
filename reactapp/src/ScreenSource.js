@@ -3,22 +3,24 @@ import { Link, useParams } from "react-router-dom";
 import "./App.css";
 import { List, Avatar } from "antd";
 import Nav from "./Nav";
+import { connect } from "react-redux";
 
 function ScreenSource(props) {
   const [sourceList, setSourceList] = useState([]);
-  const [langue, setLangue] = useState("");
+  // const [langue, setLangue] = useState("");
   useEffect(() => {
-    setLangue(props.newLangue);
+    console.log(props.langue);
+    // setLangue(props.langue);
     const APIResultsLoading = async () => {
       const data = await fetch(
-        `https://newsapi.org/v2/sources?language=${langue}&country=fr&apiKey=a9d2039e717f46a3882766e7788d0cf8`
+        `https://newsapi.org/v2/sources?language=${props.langue}&country=${props.langue}&apiKey=a9d2039e717f46a3882766e7788d0cf8`
       );
       const body = await data.json();
       setSourceList(body.sources);
     };
 
     APIResultsLoading();
-  }, []);
+  }, [props.langue]);
 
   return (
     <div>
@@ -49,4 +51,10 @@ function ScreenSource(props) {
   );
 }
 
-export default ScreenSource;
+function mapStateToProps(state) {
+  return {
+    langue: state.langue,
+  };
+}
+
+export default connect(mapStateToProps, null)(ScreenSource);

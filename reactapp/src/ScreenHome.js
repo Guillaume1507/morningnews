@@ -43,9 +43,11 @@ function ScreenHome(props) {
 
     const body = await data.json();
     // console.log(" le user token", body.user.token);
+    console.log(body);
     if (body.result == true) {
       setUserExists(true);
       props.setTonToken(body.token);
+      props.changeLangue(body.language);
     } else {
       setErrorsSignin(body.error);
     }
@@ -129,6 +131,9 @@ function mapDispatchToProps(dispatch) {
   return {
     setTonToken: function (userToken) {
       dispatch({ type: "toki", token: userToken });
+    },
+    changeLangue: function (country) {
+      dispatch({ type: "changeLangue", pays: country });
     },
   };
 }

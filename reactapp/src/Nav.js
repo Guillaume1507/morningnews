@@ -30,7 +30,7 @@ function Nav(props) {
         </Menu.Item>
 
         <Menu.Item padding={0} key="fr">
-          <Link to="/fr">
+          <Link to="/screensource" onClick={() => props.changeLangue("fr")}>
             <Icon type="french" />
             <img
               padding={0}
@@ -41,7 +41,13 @@ function Nav(props) {
           </Link>
         </Menu.Item>
         <Menu.Item key="thai">
-          <Link onClick={() => props.changeLangue()}>
+          <Link
+            to="/screensource"
+            onClick={() => {
+              props.changeLangue("it");
+              // changeDefault();
+            }}
+          >
             <Icon type="thai" />
             <img
               padding={0}
@@ -57,8 +63,8 @@ function Nav(props) {
 }
 function mapDispatchToProps(dispatch) {
   return {
-    changeLangue: function () {
-      dispatch({ type: "langue" });
+    changeLangue: function (country) {
+      dispatch({ type: "changeLangue", pays: country });
     },
   };
 }

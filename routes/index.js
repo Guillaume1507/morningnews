@@ -39,6 +39,7 @@ router.post("/sign-up", async function (req, res, next) {
       email: req.body.emailFromFront,
       password: hash,
       token: uid2(32),
+      wishList: [],
     });
 
     saveUser = await newUser.save();
@@ -73,6 +74,8 @@ router.post("/sign-in", async function (req, res, next) {
     if (bcrypt.compareSync(password, user.password)) {
       // res.json({ login: true, user });
       token = user.token;
+      language = user.language;
+      wishList = user.wishList;
       result = true;
     } else {
       error.push("email ou mot de passe incorrect");
@@ -87,7 +90,7 @@ router.post("/sign-in", async function (req, res, next) {
     // }
   }
 
-  res.json({ result, user, error, token });
+  res.json({ result, user, error, token, wishList, language });
 });
 
 // router.post("/thai", async function (req, res, next) {

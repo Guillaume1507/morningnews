@@ -1,6 +1,6 @@
-export default function (langue = "fr", action) {
-  if (action.type == "langue") {
-    var newLangue = "it";
+export default function (langue = "", action) {
+  if (action.type == "changeLangue") {
+    var newLangue = action.pays;
     return newLangue;
   } else {
     return langue;
