@@ -1,34 +1,35 @@
-import React from 'react';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import "./App.css";
 
-import {provider, Provider} from 'react-redux'
-import {createStore, combineReducers} from 'redux'
+import { Provider } from "react-redux";
+import { createStore, combineReducers } from "redux";
+import langue from "./reducers/langue";
+import wishList from "./reducers/articles";
+import token from "./reducers/token";
+import ScreenHome from "./ScreenHome";
+import ScreenArticlesBySource from "./ScreenArticlesBySource";
+import ScreenMyArticles from "./ScreenMyArticles";
+import ScreenSource from "./ScreenSource";
 
-import wishList from './reducers/articles'
-
-import ScreenHome from './ScreenHome';
-import ScreenArticlesBySource from './ScreenArticlesBySource'
-import ScreenMyArticles from './ScreenMyArticles'
-import ScreenSource from './ScreenSource'
-
-const store = createStore(combineReducers({wishList}))
+const store = createStore(combineReducers({ wishList, token, langue }));
 
 function App() {
   return (
-
     <Provider store={store}>
       <Router>
         <Switch>
           <Route component={ScreenHome} path="/" exact />
           <Route component={ScreenSource} path="/screensource" exact />
-          <Route component={ScreenArticlesBySource} path="/screenarticlesbysource/:id" exact />
+          <Route
+            component={ScreenArticlesBySource}
+            path="/screenarticlesbysource/:id"
+            exact
+          />
           <Route component={ScreenMyArticles} path="/screenmyarticles" exact />
         </Switch>
       </Router>
     </Provider>
-    
-
   );
 }
 

@@ -1,105 +1,136 @@
-import React, {useState} from 'react';
-import './App.css';
-import {Input,Button} from 'antd';
-import {Link, Redirect} from 'react-router-dom'
+import React, { useState } from "react";
+import "./App.css";
+import { Input, Button } from "antd";
+import { Link, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 
-function ScreenHome() {
+function ScreenHome(props) {
+  const [signUpUsername, setSignUpUsername] = useState("");
+  const [signUpEmail, setSignUpEmail] = useState("");
+  const [signUpPassword, setSignUpPassword] = useState("");
+  // const [signUpToken, setSignUpToken] = useState("");
+  const [signInEmail, setSignInEmail] = useState("");
+  const [signInPassword, setSignInPassword] = useState("");
 
-  const [signUpUsername, setSignUpUsername] = useState('')
-  const [signUpEmail, setSignUpEmail] = useState('')
-  const [signUpPassword, setSignUpPassword] = useState('')
+  const [userExists, setUserExists] = useState(false);
 
-  const [signInEmail, setSignInEmail] = useState('')
-  const [signInPassword, setSignInPassword] = useState('')
-
-  const [userExists, setUserExists] = useState(false)
-
-  const [listErrorsSignin, setErrorsSignin] = useState([])
-  const [listErrorsSignup, setErrorsSignup] = useState([])
+  const [listErrorsSignin, setErrorsSignin] = useState([]);
+  const [listErrorsSignup, setErrorsSignup] = useState([]);
 
   var handleSubmitSignup = async () => {
-    
-    const data = await fetch('/sign-up', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: `usernameFromFront=${signUpUsername}&emailFromFront=${signUpEmail}&passwordFromFront=${signUpPassword}`
-    })
+    const data = await fetch("/sign-up", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `usernameFromFront=${signUpUsername}&emailFromFront=${signUpEmail}&passwordFromFront=${signUpPassword}&token`,
+    });
 
-    const body = await data.json()
-
-    if(body.result == true){
-      setUserExists(true)
+    const body = await data.json();
+    console.log("tokeeeen", body.saveUser.token);
+    if (body.result == true) {
+      setUserExists(true);
+      props.setTonToken(body.saveUser.token);
     } else {
-      setErrorsSignup(body.error)
+      setErrorsSignup(body.error);
     }
-  }
+  };
 
   var handleSubmitSignin = async () => {
- 
-    const data = await fetch('/sign-in', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: `emailFromFront=${signInEmail}&passwordFromFront=${signInPassword}`
-    })
+    const data = await fetch("/sign-in", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `emailFromFront=${signInEmail}&passwordFromFront=${signInPassword}&token`,
+    });
 
-    const body = await data.json()
-
-    if(body.result == true){
-      setUserExists(true)
-    }  else {
-      setErrorsSignin(body.error)
+    const body = await data.json();
+    // console.log(" le user token", body.user.token);
+    if (body.result == true) {
+      setUserExists(true);
+      props.setTonToken(body.token);
+    } else {
+      setErrorsSignin(body.error);
     }
+  };
+
+  if (userExists) {
+    return <Redirect to="/screensource" />;
   }
 
-  if(userExists){
-    return <Redirect to='/screensource' />
-  }
+  var tabErrorsSignin = listErrorsSignin.map((error, i) => {
+    return <p>{error}</p>;
+  });
 
-  var tabErrorsSignin = listErrorsSignin.map((error,i) => {
-    return(<p>{error}</p>)
-  })
-
-  var tabErrorsSignup = listErrorsSignup.map((error,i) => {
-    return(<p>{error}</p>)
-  })
-
-  
+  var tabErrorsSignup = listErrorsSignup.map((error, i) => {
+    return <p>{error}</p>;
+  });
 
   return (
-    <div className="Login-page" >
+    <div className="Login-page">
+      {/* SIGN-IN */}
 
-          {/* SIGN-IN */}
+      <div className="Sign">
+        <Input
+          onChange={(e) => setSignInEmail(e.target.value)}
+          className="Login-input"
+          placeholder="email"
+        />
 
-          <div className="Sign">
-                  
-            <Input onChange={(e) => setSignInEmail(e.target.value)} className="Login-input" placeholder="email" />
+        <Input.Password
+          onChange={(e) => setSignInPassword(e.target.value)}
+          className="Login-input"
+          placeholder="password"
+        />
 
-            <Input.Password onChange={(e) => setSignInPassword(e.target.value)} className="Login-input" placeholder="password" />
-            
-            {tabErrorsSignin}
+        {tabErrorsSignin}
 
-            <Button onClick={() => handleSubmitSignin()}  style={{width:'80px'}} type="primary">Sign-in</Button>
-
-          </div>
-
-          {/* SIGN-UP */}
-
-          <div className="Sign">
-                  
-            <Input onChange={(e) => setSignUpUsername(e.target.value)} className="Login-input" placeholder="username" />
-
-            <Input onChange={(e) => setSignUpEmail(e.target.value)} className="Login-input" placeholder="email" />
-
-            <Input.Password onChange={(e) => setSignUpPassword(e.target.value)} className="Login-input" placeholder="password" />
-      
-            {tabErrorsSignup}
-
-            <Button onClick={() => handleSubmitSignup()} style={{width:'80px'}} type="primary">Sign-up</Button>
-
-          </div>
-
+        <Button
+          onClick={() => handleSubmitSignin()}
+          style={{ width: "80px" }}
+          type="primary"
+        >
+          Sign-in
+        </Button>
       </div>
+
+      {/* SIGN-UP */}
+
+      <div className="Sign">
+        <Input
+          onChange={(e) => setSignUpUsername(e.target.value)}
+          className="Login-input"
+          placeholder="username"
+        />
+
+        <Input
+          onChange={(e) => setSignUpEmail(e.target.value)}
+          className="Login-input"
+          placeholder="email"
+        />
+
+        <Input.Password
+          onChange={(e) => setSignUpPassword(e.target.value)}
+          className="Login-input"
+          placeholder="password"
+        />
+
+        {tabErrorsSignup}
+
+        <Button
+          onClick={() => handleSubmitSignup()}
+          style={{ width: "80px" }}
+          type="primary"
+        >
+          Sign-up
+        </Button>
+      </div>
+    </div>
   );
 }
-
-export default ScreenHome;
+function mapDispatchToProps(dispatch) {
+  return {
+    setTonToken: function (userToken) {
+      dispatch({ type: "toki", token: userToken });
+    },
+  };
+}
+// export default ScreenHome;
+export default connect(null, mapDispatchToProps)(ScreenHome);
